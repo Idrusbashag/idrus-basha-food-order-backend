@@ -2,6 +2,7 @@ require('dotenv').config()
 import express from 'express';
 var bodyParser = require('body-parser')
 var cors = require('cors')
+const multer = require('multer')
 const app = express()
 var appRoutes = require("./routes/appRoutes")
 var adminRoutes = require('./routes/adminRoute')
@@ -12,11 +13,7 @@ const PORT = process.env.PORT || 3000
 // some useful library
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
-app.use(cors({
-    origin: "*",
-    methods: ["GET", "POST", "PUT","DELETE"],
-    credentials: true
-}));
+app.use(cors({origin: '*'}))
 
 app.use(function(req,res,next){
     res.header("Access-Control-Allow-Origin", "*");
@@ -31,7 +28,37 @@ const db = require('./database/db');
 app.get('/', (req, res) => {
     res.send("Hello idrus from Server")
 })
+// image ggogle cloud
+const multerMid = multer({
+    storage: multer.memoryStorage(),
+    limits: {
+      fileSize: 5 * 1024 * 1024,
+    },
+  })
+  app.use(multerMid.single('file'))
+  
+  
 
+// Socket connection
+var server = require('http').Server(app);
+var io = require('socket.io')(server,
+    
+    
+    {
+    cors: {
+      origin:'*',
+      methods: ["GET", "POST"],
+      allowedHeaders: ["my-custom-header"],
+      credentials: true
+    }
+  }
+  
+  ); 
+app.set('io',io);
+io.on('connection', socket => {
+    console.log("new  sockeet connection...");
+    socket.emit("test event","hey basha");
+});
 
 
 // route configure
