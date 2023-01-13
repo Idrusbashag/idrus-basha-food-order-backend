@@ -27,7 +27,7 @@ router.get('/getalluser', verifyToken, (req, res, next) => {
 
 // admin side block user
 router.delete("/blockuser/:id", verifyToken, (req, res, next) => {
-    // console.log(req.params.id);
+    console.log(req.params.id);
     var id = req.params.id
     User.updateOne({ _id: id }, { blocked: true }, function (err, user) {
         console.log(1);
@@ -41,7 +41,7 @@ router.delete("/blockuser/:id", verifyToken, (req, res, next) => {
         }
     })
 
-    // res.status(200).json({ msg: "ok" })
+    res.status(200).json({ msg: "ok" })
 })
 
 // admin side unblockuser
@@ -94,7 +94,7 @@ function getTime() {
 var storage = multer.diskStorage({
 
     destination: (req, file, callBack) => {
-        callBack(null, 'backend\src\assests\pizza')
+        callBack(null, 'top/idrus-basha-food-order-frontend/assets/pizza')
     },
     filename: (req, file, callBack) => {
         callBack(null, `${getTime()}-${file.originalname}`)
