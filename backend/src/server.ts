@@ -40,7 +40,7 @@ const multerMid = multer({
   
 
 // Socket connection
-var server = require('http').Server(app);
+var server = require('https').Server(app);
 var io = require('socket.io')(server,
     
     
