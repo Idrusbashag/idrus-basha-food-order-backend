@@ -8,6 +8,7 @@ var Feedback = require('../models/feedback')
 var Order = require('../models/order')
 var multer = require('multer')
 import jwt from 'jsonwebtoken';
+import { callbackify } from 'util';
 
 
 
@@ -95,14 +96,14 @@ var storage = multer.diskStorage({
 
     destination: (req, file, callBack) => {
         callBack(null, 'https://idrus-basha-food-order-frontend.onrender.com/assets/pizza')
+        console.log(storage)
     },
     filename: (req, file, callBack) => {
         callBack(null, `${getTime()}-${file.originalname}`)
+        console.log(storage)
     }
 })
 var upload = multer({ storage: storage })
-
-
 // addpizza data
 router.post("/addpizza", verifyToken, upload.single('file'), (req, res, next) => {
     var file = req.file
