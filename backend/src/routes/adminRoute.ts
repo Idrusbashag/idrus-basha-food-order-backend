@@ -110,7 +110,7 @@ router.post("/addpizza", verifyToken, upload.single('file'), (req, res, next) =>
         pizzaname: req.body.pizzaname,
         pizzasize: req.body.pizzasize,
         pizzaprice: req.body.pizzaprice,
-        pizzaimage: req.body.pizzaimage
+        pizzaimage: file.filename
     })
     try {
         doc = pizza.save();
