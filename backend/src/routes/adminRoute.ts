@@ -120,6 +120,7 @@ router.post("/addpizza", verifyToken, upload.single('file'), (req, res, next) =>
     }
     catch (err) {
         console.log(err)
+        console.log(storage)
         return res.status(501).json(err);  
     }
 })
