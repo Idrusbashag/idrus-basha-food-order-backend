@@ -7,7 +7,7 @@ var Pizza = require('../models/pizza')
 var Feedback = require('../models/feedback')
 var Order = require('../models/order')
 var multer = require('multer')
-import jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken')
 var bcrypt = require('bcrypt')
 import payload= require('jwt-payload')
 
