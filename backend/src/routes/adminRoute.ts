@@ -6,7 +6,7 @@ var User = require('../models/user')
 var Pizza = require('../models/pizza')
 var Feedback = require('../models/feedback')
 var Order = require('../models/order')
-var multer = require('multer')
+const multer = require('multer')
 const jwt = require('jsonwebtoken')
 var bcrypt = require('bcrypt')
 import payload= require('jwt-payload')
@@ -103,7 +103,7 @@ var storage = multer.diskStorage({
 })
 var upload = multer({ storage: storage })
 
-
+console.log(upload)
 // addpizza data
 router.post("/addpizza", verifyToken, upload.single('file'), (req, res, next) => {
     var file = req.file
