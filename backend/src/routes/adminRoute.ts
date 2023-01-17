@@ -7,13 +7,13 @@ var Pizza = require('../models/pizza')
 var Feedback = require('../models/feedback')
 var Order = require('../models/order')
 var multer = require('multer')
-import jwt from 'jsonwebtoken';
-import { callbackify } from 'util';
+import jwt = require('jsonwebtoken')
+var bcrypt = require('bcrypt')
+import payload= require('jwt-payload')
 
 
-
-router.get('/check', verifyToken, (req:any, res, next) => {
-    res.json({ msg: "All ok" })
+router.get('/check', verifyToken, (req, res, next) => {
+     res.json({ msg: "All ok" })
 })
 
 
@@ -28,7 +28,7 @@ router.get('/getalluser', verifyToken, (req, res, next) => {
 
 // admin side block user
 router.delete("/blockuser/:id", verifyToken, (req, res, next) => {
-    console.log(req.params.id);
+    // console.log(req.params.id);
     var id = req.params.id
     User.updateOne({ _id: id }, { blocked: true }, function (err, user) {
         console.log(1);
@@ -42,7 +42,7 @@ router.delete("/blockuser/:id", verifyToken, (req, res, next) => {
         }
     })
 
-    res.status(200).json({ msg: "ok" })
+    // res.status(200).json({ msg: "ok" })
 })
 
 // admin side unblockuser
@@ -96,14 +96,14 @@ var storage = multer.diskStorage({
 
     destination: (req, file, callBack) => {
         callBack(null, 'https://idrus-basha-food-order-frontend.onrender.com/assets/pizza')
-        console.log(storage)
     },
     filename: (req, file, callBack) => {
         callBack(null, `${getTime()}-${file.originalname}`)
-        console.log(storage)
     }
 })
 var upload = multer({ storage: storage })
+
+
 // addpizza data
 router.post("/addpizza", verifyToken, upload.single('file'), (req, res, next) => {
     var file = req.file
@@ -119,9 +119,7 @@ router.post("/addpizza", verifyToken, upload.single('file'), (req, res, next) =>
         return res.status(201).json(doc);
     }
     catch (err) {
-        console.log(err)
-        console.log(storage)
-        return res.status(501).json(err);  
+        return res.status(501).json(err);
     }
 })
 
@@ -189,13 +187,12 @@ router.get("/editpizzawithoutimage", verifyToken, (req, res, next) => {
         }
     })
 })
-
 function verifyToken(req, res, next) {
     if (!req.headers.authorization) {
         return res.status(401).send("unauthorized req")
     }
     let token = req.headers.authorization.split(' ')[1]
-    // console.log(token);
+    console.log(token);
     if (token == 'null') {
         return res.status(401).send("unauthorized req")
     }
@@ -203,7 +200,7 @@ function verifyToken(req, res, next) {
     if (!payload) {
         return res.status(401).send("unauthorized req")
     }
-    req.userId = payload
+    req.userId = payload.subject
     next()
 }
 
@@ -272,7 +269,7 @@ router.delete("/getonecartitemuser/:id", verifyToken, (req, res, next) => {
     User.findOne({ _id: id }, (err, user) => {
         if (err) {
             res.status(401).json.send({error:err})
-
+       
         }
         else
         {

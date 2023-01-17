@@ -24,6 +24,7 @@
     "express-jwt": "^8.2.0",
     "express-session": "^1.17.3",
     "jsonwebtoken": "^9.0.0",
+    "jwt-payload": "^1.0.7",
     "mongodb": "^4.13.0",
     "mongoose": "^6.8.1",
     "mongoose-type-email": "^1.1.2",

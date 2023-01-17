@@ -90,8 +90,8 @@ function verifyToken(req, res, next) {
         return res.status(401).send("unauthorized req")
     }
     req.userId = payload.subject
-    // console.log("userrrrrrrrrrrrrrrrrrrrr");
-    // console.log(req.userId);
+    console.log("user");
+     console.log(req.userId);
     next()
 }
 
