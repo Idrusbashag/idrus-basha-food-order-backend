@@ -12,12 +12,12 @@ var bcrypt = require('bcrypt')
 import payload= require('jwt-payload')
 
 
-router.get('/check', verifyToken, (req, res, next) => {
+router.get('/check', verifyToken, (_req, res, _next) => {
      res.json({ msg: "All ok" })
 })
 
 
-router.get('/getalluser', verifyToken, (req, res, next) => {
+router.get('/getalluser', verifyToken, (_req, res, _next) => {
     User.find({ role: "customer" }, (err, users) => {
         if (err) {
             res.status(500).json({ errmsg: err })
@@ -27,7 +27,7 @@ router.get('/getalluser', verifyToken, (req, res, next) => {
 })
 
 // admin side block user
-router.delete("/blockuser/:id", verifyToken, (req, res, next) => {
+router.delete("/blockuser/:id", verifyToken, (req, res, _next) => {
     // console.log(req.params.id);
     var id = req.params.id
     User.updateOne({ _id: id }, { blocked: true }, function (err, user) {
@@ -46,7 +46,7 @@ router.delete("/blockuser/:id", verifyToken, (req, res, next) => {
 })
 
 // admin side unblockuser
-router.delete("/unblockuser/:id", verifyToken, (req, res, next) => {
+router.delete("/unblockuser/:id", verifyToken, (req, res, _next) => {
     var id = req.params.id
     // console.log(req.params.id);
     User.updateOne({ _id: id }, { blocked: false }, function (err, user) {
@@ -62,7 +62,7 @@ router.delete("/unblockuser/:id", verifyToken, (req, res, next) => {
     })
 })
 // admin side delete user
-router.delete("/deleteuser/:id", verifyToken, (req, res, next) => {
+router.delete("/deleteuser/:id", verifyToken, (req, res, _next) => {
     var id = req.params.id
     console.log(req.params.id);
     User.deleteOne({ _id: id }, (err) => {
@@ -94,10 +94,10 @@ function getTime() {
 }
 var storage = multer.diskStorage({
 
-    destination: (req: any, _file: any, callBack: (arg0: any, arg1: string) => void) => {
+    destination: (_req: any, _file: any, callBack: (arg0: any, arg1: string) => void) => {
         callBack(null, 'idrus-basha-food-order-frontend.onrender.com/assets/pizza')
     },
-    filename: (req, file, callBack) => {
+    filename: (_req, file, callBack) => {
         callBack(null, `${getTime()}-${file.originalname}`)
     }
 })
@@ -105,7 +105,7 @@ var upload = multer({ storage: storage })
 
 console.log(upload)
 // addpizza data
-router.post("/addpizza", verifyToken, upload.single('file'), (req, res, next) => {
+router.post("/addpizza", verifyToken, upload.single('file'), (req, res, _next) => {
     const file = req.file
     const pizza = new Pizza({
         pizzaname: req.body.pizzaname,
@@ -123,7 +123,7 @@ router.post("/addpizza", verifyToken, upload.single('file'), (req, res, next) =>
     }
 })
 
-router.get('/getallpizza', verifyToken, (req, res, next) => {
+router.get('/getallpizza', verifyToken, (_req, res, _next) => {
     Pizza.find({}, (err, pizzas) => {
         if (err) {
             res.status(500).json({ errmsg: err })
@@ -134,7 +134,7 @@ router.get('/getallpizza', verifyToken, (req, res, next) => {
 
 
 
-router.delete("/deletepizza/:id", verifyToken, (req, res, next) => {
+router.delete("/deletepizza/:id", verifyToken, (req, res, _next) => {
     var id = req.params.id
     console.log(req.params.id);
     Pizza.deleteOne({ _id: id }, (err) => {
@@ -148,7 +148,7 @@ router.delete("/deletepizza/:id", verifyToken, (req, res, next) => {
 
 
 // edit pizza with image
-router.post("/editpizzawithimage", verifyToken, upload.single('file'), (req, res, next) => {
+router.post("/editpizzawithimage", verifyToken, upload.single('file'), (req, res, _next) => {
     var file = req.file
     Pizza.updateOne({ _id: req.body.id }, {
         pizzaname: req.body.pizzaname,
@@ -170,7 +170,7 @@ router.post("/editpizzawithimage", verifyToken, upload.single('file'), (req, res
 })
 
 // edit pizza without image
-router.get("/editpizzawithoutimage", verifyToken, (req, res, next) => {
+router.get("/editpizzawithoutimage", verifyToken, (req, res, _next) => {
     Pizza.updateOne({ _id: req.query.id }, {
         pizzaname: req.query.pizzaname,
         pizzasize: req.query.pizzasize,
@@ -205,7 +205,7 @@ function verifyToken(req, res, next) {
 }
 
 
-router.get('/getallfeedbback', verifyToken, (req, res, next) => {
+router.get('/getallfeedbback', verifyToken, (_req, res, _next) => {
     Feedback.find({}, (err, feedbacks) => {
         if (err) {
             res.status(500).json({ errmsg: err })
@@ -216,7 +216,7 @@ router.get('/getallfeedbback', verifyToken, (req, res, next) => {
 
 
 
-router.delete("/deletefeedback/:id", verifyToken, (req, res, next) => {
+router.delete("/deletefeedback/:id", verifyToken, (req, res, _next) => {
     var id = req.params.id
     // console.log(req.params.id);
     Feedback.deleteOne({ _id: id }, (err) => {
@@ -231,7 +231,7 @@ router.delete("/deletefeedback/:id", verifyToken, (req, res, next) => {
 
 
 
-router.get('/getallorder', verifyToken, (req, res, next) => {
+router.get('/getallorder', verifyToken, (_req, res, _next) => {
     Order.find({}, (err, orders) => {
         if (err) {
             res.status(500).json({ errmsg: err })
@@ -240,7 +240,7 @@ router.get('/getallorder', verifyToken, (req, res, next) => {
     })
 })
 
-router.delete("/deleteorder/:id", verifyToken, (req, res, next) => {
+router.delete("/deleteorder/:id", verifyToken, (req, res, _next) => {
     var id = req.params.id
     Order.deleteOne({ _id: id }, (err) => {
         if (err) {
@@ -253,7 +253,7 @@ router.delete("/deleteorder/:id", verifyToken, (req, res, next) => {
 
 
 
-router.delete("/getonecartitem/:id", verifyToken, (req, res, next) => {
+router.delete("/getonecartitem/:id", verifyToken, (req, res, _next) => {
     var id = req.params.id
     Order.find({ _id: id }, (err, order) => {
         if (err) {
@@ -263,7 +263,7 @@ router.delete("/getonecartitem/:id", verifyToken, (req, res, next) => {
     })
 })
 
-router.delete("/getonecartitemuser/:id", verifyToken, (req, res, next) => {
+router.delete("/getonecartitemuser/:id", verifyToken, (req, res, _next) => {
     var id = req.params.id
     console.log("yes in backend");
     User.findOne({ _id: id }, (err, user) => {
