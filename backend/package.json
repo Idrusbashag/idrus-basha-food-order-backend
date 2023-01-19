@@ -6,7 +6,7 @@
   "scripts": {
     "test": "jest",
     "serve": "node server.js",
-    "dev": "nodemon dist/server.js",
+    "dev": "nodemon dist/server.js  --ssl --ssl-cert localhost.crt --ssl-key localhost.key",
     "build": "npm install && tsc"
   },
   "author": "Idrus",

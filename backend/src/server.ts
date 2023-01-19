@@ -1,5 +1,7 @@
 require('dotenv').config()
 import express from 'express';
+const https = require('https')
+const path = require('path')
 var bodyParser = require('body-parser')
 var cors = require('cors')
 const multer = require('multer')
@@ -7,7 +9,7 @@ const app = express()
 var appRoutes = require("./routes/appRoutes")
 var adminRoutes = require('./routes/adminRoute')
 
-// process.env.PORT hoy to e else 3000
+// process.env.PORT hoy to  else 3000
 const PORT = process.env.PORT || 3000
 
 // some useful library
@@ -59,8 +61,6 @@ io.on('connection', socket => {
     console.log("new  sockeet connection...");
     socket.emit("test event","hey basha");
 });
-
-
 // route configure
 app.use('/', appRoutes)
 app.use('/admin', adminRoutes)
