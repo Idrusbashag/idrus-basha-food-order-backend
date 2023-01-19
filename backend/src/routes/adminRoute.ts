@@ -10,6 +10,7 @@ const multer = require('multer')
 const jwt = require('jsonwebtoken')
 var bcrypt = require('bcrypt')
 import payload= require('jwt-payload')
+import { fileURLToPath } from 'url';
 
 
 router.get('/check', verifyToken, (req, res, next) => {
@@ -99,13 +100,25 @@ var storage = multer.diskStorage({
     },
     filename: function (req, file, callBack)  {
         callBack(null, `${getTime()}-${file.originalname}`)
-    }
-})
-var upload = multer({ storage: storage });
+    },
+});
+const maxSize = 1 * 1024 * 1024
+var upload = multer({
+     storage: storage,
+     fileFilter: (req, file, callBack) =>{
+        if(file.mimetype == "image/png" || file.mimetype == "image/jpg" || file.mimetype == "image/jpeg"){
+            callBack(null, true);
+        }else {
+            callBack(null, false);
+            return callBack(new Error('only .jpg, .png, and .jpeg format allowed!'));
+        }
+     },
+     limits: {filesize : maxSize}
+    }).single('file')
 
 console.log(upload)
 // addpizza data
-router.post("/addpizza", verifyToken, upload.single('file'),function (req, res, next)  {
+router.post("/addpizza", verifyToken,function (req, res, next)  {
     var file = req.file
     var pizza = new Pizza({
         pizzaname: req.body.pizzaname,
@@ -148,7 +161,7 @@ router.delete("/deletepizza/:id", verifyToken, (req, res, next) => {
 
 
 // edit pizza with image
-router.post("/editpizzawithimage", verifyToken, upload.single('file'), (req, res, next) => {
+router.post("/editpizzawithimage", verifyToken, (req, res, next) => {
     var file = req.file
     Pizza.updateOne({ _id: req.body.id }, {
         pizzaname: req.body.pizzaname,
