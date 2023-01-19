@@ -102,21 +102,21 @@ var storage = multer.diskStorage({
         callBack(null, `${getTime()}-${file.originalname}`)
     },
 });
-const maxSize = 1 * 1024 * 1024
-var upload = multer({
-     storage: storage,
-     fileFilter: (req, file, callBack) =>{
-        if(file.mimetype == "image/png" || file.mimetype == "image/jpg" || file.mimetype == "image/jpeg"){
-            callBack(null, true);
-        }else {
-            callBack(null, false);
-            return callBack(new Error('only .jpg, .png, and .jpeg format allowed!'));
-        }
-     },
-     limits: {filesize : maxSize}
-    }).single('file')
+// const maxSize = 1 * 1024 * 1024
+// var upload = multer({
+//      storage: storage,
+//      fileFilter: (req, file, callBack) =>{
+//         if(file.mimetype == "image/png" || file.mimetype == "image/jpg" || file.mimetype == "image/jpeg"){
+//             callBack(null, true);
+//         }else {
+//             callBack(null, false);
+//             return callBack(new Error('only .jpg, .png, and .jpeg format allowed!'));
+//         }
+//      },
+//      limits: {filesize : maxSize}
+//     }).single('file')
 
-console.log(upload)
+// console.log(upload)
 // addpizza data
 router.post("/addpizza", verifyToken,function (req, res, next)  {
     var file = req.file
