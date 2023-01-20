@@ -9,7 +9,10 @@ var Order = require('../models/order')
 const multer = require('multer')
 const jwt = require('jsonwebtoken')
 var bcrypt = require('bcrypt')
-import payload= require('jwt-payload')
+import payload= require('jwt-payload');
+const path = require('path');
+const cors = require('cors')
+const bodyparser = require('body-parser')
 import { fileURLToPath } from 'url';
 
 
@@ -93,38 +96,46 @@ function getTime() {
 
     return today;
 }
+const app = express()
+
+app.use(express.static(path.join(__dirname + "/uploads")))
+
+app.use(bodyparser.urlencoded({ extended: false }))
+app.use(bodyparser.json())
+
+app.use(cors())
+
 var storage = multer.diskStorage({
 
     destination: function (req, file, callBack) {
-        callBack(null, 'https://idrus-basha-food-order-frontend.onrender.com//dist//assets//pizza')
+        callBack(null, 'uploads')
     },
     filename: function (req, file, callBack)  {
         callBack(null, `${getTime()}-${file.originalname}`)
     },
 });
-// const maxSize = 1 * 1024 * 1024
-// var upload = multer({
-//      storage: storage,
-//      fileFilter: (req, file, callBack) =>{
-//         if(file.mimetype == "image/png" || file.mimetype == "image/jpg" || file.mimetype == "image/jpeg"){
-//             callBack(null, true);
-//         }else {
-//             callBack(null, false);
-//             return callBack(new Error('only .jpg, .png, and .jpeg format allowed!'));
-//         }
-//      },
-//      limits: {filesize : maxSize}
-//     }).single('file')
-
-// console.log(upload)
+const maxSize = 1 * 1024 * 1024
+var upload = multer({
+     storage: storage,
+     fileFilter: (req, file, callBack) =>{
+        if(file.mimetype == "image/png" || file.mimetype == "image/jpg" || file.mimetype == "image/jpeg"){
+            callBack(null, true);
+        }else {
+            callBack(null, false);
+            return callBack(new Error('only .jpg, .png, and .jpeg format allowed!'));
+        }
+     },
+     limits: {filesize : maxSize}
+    }).single('file')
+console.log(upload)
 // addpizza data
-router.post("/addpizza", verifyToken,function (req, res, next)  {
-    var file = req.file
+router.post("/addpizza", verifyToken, upload, (req, res,next) => {
+    var file = new req.file
     var pizza = new Pizza({
         pizzaname: req.body.pizzaname,
         pizzasize: req.body.pizzasize,
         pizzaprice: req.body.pizzaprice,
-        pizzaimage: file.filename
+        pizzaimage:file.filename
     })
     try {
         doc = pizza.save();
