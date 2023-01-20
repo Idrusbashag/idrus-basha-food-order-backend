@@ -10,11 +10,6 @@ const multer = require('multer')
 const jwt = require('jsonwebtoken')
 var bcrypt = require('bcrypt')
 import payload= require('jwt-payload');
-const path = require('path');
-const cors = require('cors')
-const bodyparser = require('body-parser')
-import { fileURLToPath } from 'url';
-
 
 router.get('/check', verifyToken, (req, res, next) => {
      res.json({ msg: "All ok" })
@@ -96,40 +91,19 @@ function getTime() {
 
     return today;
 }
-const app = express()
-
-app.use(express.static(path.join(__dirname + "/uploads")))
-
-app.use(bodyparser.urlencoded({ extended: false }))
-app.use(bodyparser.json())
-
-app.use(cors())
 
 var storage = multer.diskStorage({
 
     destination: function (req, file, callBack) {
-        callBack(null, 'uploads')
+        callBack(null, 'https://idrus-basha-food-order-frontend.onrender.com/dist/assets/pizza')
     },
     filename: function (req, file, callBack)  {
-        callBack(null, `${getTime()}-${file.originalname}`)
+        callBack(null,file.filename `${getTime()}-${file.originalname}`)
     },
 });
-const maxSize = 1 * 1024 * 1024
-var upload = multer({
-     storage: storage,
-     fileFilter: (req, file, callBack) =>{
-        if(file.mimetype == "image/png" || file.mimetype == "image/jpg" || file.mimetype == "image/jpeg"){
-            callBack(null, true);
-        }else {
-            callBack(null, false);
-            return callBack(new Error('only .jpg, .png, and .jpeg format allowed!'));
-        }
-     },
-     limits: {filesize : maxSize}
-    }).single('file')
-console.log(upload)
+var multerMid = multer({ storage: storage })
 // addpizza data
-router.post("/addpizza", verifyToken, upload, (req, res,next) => {
+router.post("/addpizza" ,verifyToken, multerMid.single('file'), (req, res,next) => {
     var file = new req.file
     var pizza = new Pizza({
         pizzaname: req.body.pizzaname,
