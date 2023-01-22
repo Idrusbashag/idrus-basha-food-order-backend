@@ -38,7 +38,7 @@ const multerMid = multer({
     fileSize: 5 * 1024 * 1024,
   },
 })
-router.use(multerMid.single('file'))
+app.use(multerMid.single('file'))
 
 // Socket connection
 var server = require('https').Server(app);
