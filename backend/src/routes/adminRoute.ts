@@ -95,7 +95,7 @@ function getTime() {
 var storage = multer.diskStorage({
 
     destination: function (req, file, callBack) {
-        callBack(null, 'C://Users//idrus//OneDrive//Desktop//onlinepizzaorder-frontend//src//assets//pizza')
+        callBack(null, 'https://idrus-basha-food-order-frontend.onrender.com/dist/assets/pizza')
     },
     filename: function (req, file, callBack)  {
         callBack(null,file.filename `${getTime()}-${file.originalname}`)
@@ -103,17 +103,8 @@ var storage = multer.diskStorage({
 });
 var upload= multer({ storage: storage })
 
-// // image ggogle cloud
-// const multerMid = multer({
-//     storage: multer.memoryStorage(),
-//     limits: {
-//       fileSize: 5 * 1024 * 1024,
-//     },
-//   })
-//   router.use(multerMid.single('file'))
-
 // addpizza data
-router.post("/addpizza" ,verifyToken,(req, res,next) => {
+router.post("/addpizza" ,verifyToken, (req, res,next) => {
     var file = new req.file
     var pizza = new Pizza({
         pizzaname: req.body.pizzaname,

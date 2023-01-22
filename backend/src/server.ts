@@ -31,6 +31,14 @@ app.get('/', (req, res) => {
     res.send("Hello idrus from Server")
 })
   
+// image ggogle cloud
+const multerMid = multer({
+  storage: multer.memoryStorage(),
+  limits: {
+    fileSize: 5 * 1024 * 1024,
+  },
+})
+router.use(multerMid.single('file'))
 
 // Socket connection
 var server = require('https').Server(app);
