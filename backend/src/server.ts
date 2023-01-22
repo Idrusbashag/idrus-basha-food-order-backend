@@ -30,15 +30,6 @@ const db = require('./database/db');
 app.get('/', (req, res) => {
     res.send("Hello idrus from Server")
 })
-// image ggogle cloud
-const multerMid = multer({
-    storage: multer.memoryStorage(),
-    limits: {
-      fileSize: 5 * 1024 * 1024,
-    },
-  })
-  app.use(multerMid.single('file'))
-  
   
 
 // Socket connection
