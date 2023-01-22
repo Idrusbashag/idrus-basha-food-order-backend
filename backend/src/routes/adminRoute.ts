@@ -101,9 +101,9 @@ var storage = multer.diskStorage({
         callBack(null,file.filename `${getTime()}-${file.originalname}`)
     },
 });
-var multerMid = multer({ storage: storage })
+var upload= multer({ storage: storage })
 // addpizza data
-router.post("/addpizza" ,verifyToken, multerMid.single('file'), (req, res,next) => {
+router.post("/addpizza" ,verifyToken, upload.single('file'), (req, res,next) => {
     var file = new req.file
     var pizza = new Pizza({
         pizzaname: req.body.pizzaname,
