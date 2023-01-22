@@ -101,10 +101,23 @@ var storage = multer.diskStorage({
         callBack(null,file.filename `${getTime()}-${file.originalname}`)
     },
 });
-var upload= multer({ storage: storage })
+const maxSize = 1 * 1024 * 1024
+var upload = multer({
+    storage:storage,
+    fileFilter: (req, file, callBack) =>{
+        if(file.mimetype == "image/png" || file.mimetype == "image/jpg" || file.mimetype == "image/jpeg"){
+            callBack(null,true);
+        }else{
+            callBack(null, false);
+            return callBack(new Error('onliy .jpg, .png .jpeg format allowed'))
+        }
+    },
+    limits: {filesize :maxSize}
+}).single('file')
+console.log(upload)
 
 // addpizza data
-router.post("/addpizza" ,verifyToken, (req, res,next) => {
+router.post("/addpizza" ,verifyToken,upload.single('file'), (req, res,next) => {
     var file = new req.file
     var pizza = new Pizza({
         pizzaname: req.body.pizzaname,
