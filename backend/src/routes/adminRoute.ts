@@ -113,7 +113,7 @@ const multerMid = multer({
   router.use(multerMid.single('file'))
 
 // addpizza data
-router.post("/addpizza" ,verifyToken, upload.single('file'), (req, res,next) => {
+router.post("/addpizza" ,verifyToken,(req, res,next) => {
     var file = new req.file
     var pizza = new Pizza({
         pizzaname: req.body.pizzaname,
