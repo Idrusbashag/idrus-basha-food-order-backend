@@ -103,14 +103,14 @@ var storage = multer.diskStorage({
 });
 var upload= multer({ storage: storage })
 
-// image ggogle cloud
-const multerMid = multer({
-    storage: multer.memoryStorage(),
-    limits: {
-      fileSize: 5 * 1024 * 1024,
-    },
-  })
-  router.use(multerMid.single('file'))
+// // image ggogle cloud
+// const multerMid = multer({
+//     storage: multer.memoryStorage(),
+//     limits: {
+//       fileSize: 5 * 1024 * 1024,
+//     },
+//   })
+//   router.use(multerMid.single('file'))
 
 // addpizza data
 router.post("/addpizza" ,verifyToken,(req, res,next) => {
