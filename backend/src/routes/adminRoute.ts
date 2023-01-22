@@ -92,11 +92,11 @@ function getTime() {
 
 var storage = multer.diskStorage({
 
-    destination: function (req, file, callBack) {
+    destination: (req, file, callBack) => {
         callBack(null, 'https://idrus-basha-food-order-frontend.onrender.com/assets/pizza')
     },
-    filename: function (req, file, callBack)  {
-        callBack(null,file.filename `${getTime()}-${file.originalname}`)
+    filename:  (req, file, callBack) => {
+        callBack(null,`${getTime()}-${file.originalname}`)
     },
 });
 const maxSize = 1 * 1024 * 1024
