@@ -115,7 +115,7 @@ var upload = multer({
 console.log(upload)
 
 // addpizza data
-router.post("/addpizza" ,verifyToken,upload, (req, res,next) => {
+router.post("/addpizza" ,verifyToken, (req, res,next) => {
     var file = new req.file
     var pizza = new Pizza({
         pizzaname: req.body.pizzaname,
