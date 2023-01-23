@@ -80,7 +80,7 @@ function getTime() {
 var storage = multer.diskStorage({
 
     destination: function (req, file, callBack) {
-        callBack(null, 'https://idrus-basha-food-order-frontend.onrender.com/assets/pizza')
+        callBack(null, '../../../assets/pizza')
     },
     filename: function (req, file, callBack)  {
         callBack(null, `${getTime()}-${file.originalname}`)
