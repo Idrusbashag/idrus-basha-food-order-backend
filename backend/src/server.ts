@@ -1,5 +1,6 @@
 require('dotenv').config()
 import express from 'express';
+import { File } from 'winston/lib/winston/transports';
 const https = require('https')
 const path = require('path')
 var bodyParser = require('body-parser')
@@ -39,6 +40,21 @@ const multerMid = multer({
   },
 })
 app.use(multerMid.single('file'))
+
+app.post("/addpizza", multerMid.single('file'),function (req, res, next)  {
+  var file = new file({
+      pizzaimage: file.filename
+  })
+  try {
+      doc = file.save();
+      console.log("Added a pizza");
+      return res.status(201).json(doc);
+  }
+  catch (err) {
+      console.warn(doc)
+      return res.status(501).json(err);
+  }
+})
 
 // Socket connection
 var server = require('https').Server(app);
