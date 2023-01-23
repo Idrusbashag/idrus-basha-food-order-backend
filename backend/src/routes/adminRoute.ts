@@ -92,10 +92,10 @@ function getTime() {
 
 var storage = multer.diskStorage({
 
-    destination: (req, file, callBack) => {
+    destination:function (req, file, callBack)  {
         callBack(null, 'https://idrus-basha-food-order-frontend.onrender.com/assets/pizza')
     },
-    filename:  (req, file, callBack) => {
+    filename:function  (req, file, callBack)  {
         callBack(null,`${getTime()}-${file.originalname}`)
     },
 });
@@ -114,8 +114,9 @@ var upload = multer({
 }).single('file')
 console.log(upload)
 
+
 // addpizza data
-router.post("/addpizza" ,verifyToken,upload.single('file'), (req, res,next) => {
+router.post("/addpizza" ,verifyToken,function(req, res,next)  {
     var file = new req.file
     var pizza = new Pizza({
         pizzaname: req.body.pizzaname,
