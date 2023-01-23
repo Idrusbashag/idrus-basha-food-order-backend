@@ -9,13 +9,11 @@ var Order = require('../models/order')
 const multer = require('multer')
 const jwt = require('jsonwebtoken')
 var bcrypt = require('bcrypt')
-import payload= require('jwt-payload');
-
+import payload= require('jwt-payload')
+import { fileURLToPath } from 'url';
 router.get('/check', verifyToken, (req, res, next) => {
      res.json({ msg: "All ok" })
 })
-
-
 router.get('/getalluser', verifyToken, (req, res, next) => {
     User.find({ role: "customer" }, (err, users) => {
         if (err) {
@@ -24,7 +22,6 @@ router.get('/getalluser', verifyToken, (req, res, next) => {
         res.status(200).json({ msg: users })
     })
 })
-
 // admin side block user
 router.delete("/blockuser/:id", verifyToken, (req, res, next) => {
     // console.log(req.params.id);
@@ -40,10 +37,8 @@ router.delete("/blockuser/:id", verifyToken, (req, res, next) => {
             return res.status(201).json(user);
         }
     })
-
     // res.status(200).json({ msg: "ok" })
 })
-
 // admin side unblockuser
 router.delete("/unblockuser/:id", verifyToken, (req, res, next) => {
     var id = req.params.id
@@ -70,59 +65,49 @@ router.delete("/deleteuser/:id", verifyToken, (req, res, next) => {
     })
     res.status(200).json({ msg: "yes deleted user by admin" })
 })
-
-
-
 // addpizza image
-
 function getTime() {
     var today = new Date().toLocaleDateString()
     today = today.toString().replace('/', '-')
     today = today.replace('/', '-')
-
     const date = new Date();
     let h = date.getHours();
     let m = date.getMinutes();
     let s = date.getSeconds();
-
     today += '-' + h + '-' + m + '-' + s
-
     return today;
 }
-
 var storage = multer.diskStorage({
 
-    destination:function (req, file, callBack)  {
+    destination: function (req, file, callBack) {
         callBack(null, 'https://idrus-basha-food-order-frontend.onrender.com/assets/pizza')
     },
-    filename:function  (req, file, callBack)  {
-        callBack(null,`${getTime()}-${file.originalname}`)
+    filename: function (req, file, callBack)  {
+        callBack(null, `${getTime()}-${file.originalname}`)
     },
 });
 const maxSize = 1 * 1024 * 1024
 var upload = multer({
-    storage:storage,
-    fileFilter: (req, file, callBack) =>{
+     storage: storage,
+     fileFilter: (req, file, callBack) =>{
         if(file.mimetype == "image/png" || file.mimetype == "image/jpg" || file.mimetype == "image/jpeg"){
-            callBack(null,true);
-        }else{
+            callBack(null, true);
+        }else {
             callBack(null, false);
-            return callBack(new Error('onliy .jpg, .png .jpeg format allowed'))
+            return callBack(new Error('only .jpg, .png, and .jpeg format allowed!'));
         }
-    },
-    limits: {filesize :maxSize}
-}).single('file')
+     },
+     limits: {filesize : maxSize}
+    }).single('file')
 console.log(upload)
-
-
 // addpizza data
-router.post("/addpizza" ,verifyToken,function(req, res,next)  {
-    var file = new req.file
+router.post("/addpizza", verifyToken,function (req, res, next)  {
+    var file = req.file
     var pizza = new Pizza({
         pizzaname: req.body.pizzaname,
         pizzasize: req.body.pizzasize,
         pizzaprice: req.body.pizzaprice,
-        pizzaimage:file.filename
+        pizzaimage: file.filename
     })
     try {
         doc = pizza.save();
@@ -134,7 +119,6 @@ router.post("/addpizza" ,verifyToken,function(req, res,next)  {
         return res.status(501).json(err);
     }
 })
-
 router.get('/getallpizza', verifyToken, (req, res, next) => {
     Pizza.find({}, (err, pizzas) => {
         if (err) {
@@ -143,9 +127,6 @@ router.get('/getallpizza', verifyToken, (req, res, next) => {
         res.status(200).json({ msg: pizzas })
     })
 })
-
-
-
 router.delete("/deletepizza/:id", verifyToken, (req, res, next) => {
     var id = req.params.id
     console.log(req.params.id);
@@ -156,8 +137,6 @@ router.delete("/deletepizza/:id", verifyToken, (req, res, next) => {
     })
     res.status(200).json({ msg: "yes deleted pizza by admin" })
 })
-
-
 // edit pizza with image
 router.post("/editpizzawithimage", verifyToken, (req, res, next) => {
     var file = req.file
@@ -177,9 +156,7 @@ router.post("/editpizzawithimage", verifyToken, (req, res, next) => {
             return res.status(201).json(pizza);
         }
     })
-
 })
-
 // edit pizza without image
 router.get("/editpizzawithoutimage", verifyToken, (req, res, next) => {
     Pizza.updateOne({ _id: req.query.id }, {
@@ -187,7 +164,6 @@ router.get("/editpizzawithoutimage", verifyToken, (req, res, next) => {
         pizzasize: req.query.pizzasize,
         pizzaprice: req.query.pizzaprice
     }, function (err, pizza) {
-
         if (err) {
             console.log(err)
             res.status(500).json({ errmsg: err })
@@ -214,8 +190,6 @@ function verifyToken(req, res, next) {
     req.userId = payload.subject
     next()
 }
-
-
 router.get('/getallfeedbback', verifyToken, (req, res, next) => {
     Feedback.find({}, (err, feedbacks) => {
         if (err) {
@@ -224,9 +198,6 @@ router.get('/getallfeedbback', verifyToken, (req, res, next) => {
         res.status(200).json({ msg: feedbacks })
     })
 })
-
-
-
 router.delete("/deletefeedback/:id", verifyToken, (req, res, next) => {
     var id = req.params.id
     // console.log(req.params.id);
@@ -238,10 +209,6 @@ router.delete("/deletefeedback/:id", verifyToken, (req, res, next) => {
     })
     res.status(200).json({ msg: "yes deleted feedback by admin" })
 })
-
-
-
-
 router.get('/getallorder', verifyToken, (req, res, next) => {
     Order.find({}, (err, orders) => {
         if (err) {
@@ -250,7 +217,6 @@ router.get('/getallorder', verifyToken, (req, res, next) => {
         res.status(200).json({ msg: orders })
     })
 })
-
 router.delete("/deleteorder/:id", verifyToken, (req, res, next) => {
     var id = req.params.id
     Order.deleteOne({ _id: id }, (err) => {
@@ -261,9 +227,6 @@ router.delete("/deleteorder/:id", verifyToken, (req, res, next) => {
     })
     res.status(200).json({ msg: "yes deleted order by admin" })
 })
-
-
-
 router.delete("/getonecartitem/:id", verifyToken, (req, res, next) => {
     var id = req.params.id
     Order.find({ _id: id }, (err, order) => {
@@ -273,7 +236,6 @@ router.delete("/getonecartitem/:id", verifyToken, (req, res, next) => {
         res.send(order)
     })
 })
-
 router.delete("/getonecartitemuser/:id", verifyToken, (req, res, next) => {
     var id = req.params.id
     console.log("yes in backend");
@@ -288,10 +250,7 @@ router.delete("/getonecartitemuser/:id", verifyToken, (req, res, next) => {
         }
     })
 })
-
-
 module.exports = router
 function callBack(arg0: null, arg1: string) {
     throw new Error('Function not implemented.');
 }
-
