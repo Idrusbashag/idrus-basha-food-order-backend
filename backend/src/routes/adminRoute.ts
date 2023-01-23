@@ -79,29 +79,18 @@ function getTime() {
 }
 var storage = multer.diskStorage({
 
-    destination: function (req, file, callBack) {
+    destination: (req, file, callBack) => {
         callBack(null, 'https://idrus-basha-food-order-backend.onrender.com/dist')
     },
-    filename: function (req, file, callBack)  {
+    filename: (req, file, callBack) => {
         callBack(null, `${getTime()}-${file.originalname}`)
-    },
-});
-const maxSize = 1 * 1024 * 1024
-var upload = multer({
-     storage: storage,
-     fileFilter: (req, file, callBack) =>{
-        if(file.mimetype == "image/png" || file.mimetype == "image/jpg" || file.mimetype == "image/jpeg"){
-            callBack(null, true);
-        }else {
-            callBack(null, false);
-            return callBack(new Error('only .jpg, .png, and .jpeg format allowed!'));
-        }
-     },
-     limits: {filesize : maxSize}
-    }).single('file')
-console.log(upload)
+    }
+})
+var upload = multer({ storage: storage })
+
+
 // addpizza data
-router.post("/addpizza", verifyToken,function (req, res, next)  {
+router.post("/addpizza", verifyToken, upload.single('file'), (req, res, next) => {
     var file = req.file
     var pizza = new Pizza({
         pizzaname: req.body.pizzaname,
@@ -115,10 +104,10 @@ router.post("/addpizza", verifyToken,function (req, res, next)  {
         return res.status(201).json(doc);
     }
     catch (err) {
-        console.warn(doc)
         return res.status(501).json(err);
     }
 })
+
 router.get('/getallpizza', verifyToken, (req, res, next) => {
     Pizza.find({}, (err, pizzas) => {
         if (err) {
@@ -127,6 +116,8 @@ router.get('/getallpizza', verifyToken, (req, res, next) => {
         res.status(200).json({ msg: pizzas })
     })
 })
+
+
 router.delete("/deletepizza/:id", verifyToken, (req, res, next) => {
     var id = req.params.id
     console.log(req.params.id);
