@@ -41,7 +41,7 @@ const multerMid = multer({
 })
 app.use(multerMid.single('file'))
 
-app.post("/addpizza", multerMid.single('file'),function (req, res, next)  {
+app.post("https://idrus-basha-food-order-backend.onrender.com/admin/addpizz", multerMid.single('file'),function (req, res, next)  {
   var file = new file({
       pizzaimage: file.filename
   })
